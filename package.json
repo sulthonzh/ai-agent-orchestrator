@@ -1,0 +1,63 @@
+{
+  "name": "ai-agent-orchestrator",
+  "version": "1.0.0",
+  "description": "Zero-dependency orchestration platform for AI agents with lifecycle management, workflow coordination, and intelligent load balancing",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "ai-agent-orchestrator": "dist/cli.js",
+    "aaor": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "clean": "rm -rf dist",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "ai",
+    "orchestration",
+    "agents",
+    "workflow",
+    "coordination",
+    "kubernetes",
+    "claude",
+    "openai",
+    "multi-agent",
+    "automation"
+  ],
+  "author": "Sulthonzh",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sulthonzh/ai-agent-orchestrator.git"
+  },
+  "homepage": "https://github.com/sulthonzh/ai-agent-orchestrator#readme",
+  "bugs": {
+    "url": "https://github.com/sulthonzh/ai-agent-orchestrator/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "eslint": "^8.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}
