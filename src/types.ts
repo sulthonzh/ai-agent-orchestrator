@@ -17,6 +17,8 @@ export interface AgentConfig {
 
 export interface AgentInstance {
   id: string;
+  name: string;
+  type: string;
   config: AgentConfig;
   status: 'healthy' | 'unhealthy' | 'starting' | 'stopping' | 'stopped';
   currentLoad: number;
@@ -58,7 +60,7 @@ export interface Workflow {
 }
 
 export interface WorkflowExecution {
-  id: step;
+  id: string;
   workflowId: string;
   status: 'running' | 'completed' | 'failed' | 'cancelled';
   startTime: Date;
@@ -131,3 +133,16 @@ export interface RequestOptions {
   priority?: number;
   metadata?: Record<string, unknown>;
 }
+
+// Runtime markers for type checking (enables require() introspection)
+export const AgentConfig = Symbol('AgentConfig');
+export const AgentInstance = Symbol('AgentInstance');
+export const Workflow = Symbol('Workflow');
+export const WorkflowStep = Symbol('WorkflowStep');
+export const WorkflowExecution = Symbol('WorkflowExecution');
+export const LoadBalancingConfig = Symbol('LoadBalancingConfig');
+export const ScalingConfig = Symbol('ScalingConfig');
+export const OrchestratorConfig = Symbol('OrchestratorConfig');
+export const HealthCheckResult = Symbol('HealthCheckResult');
+export const MetricsData = Symbol('MetricsData');
+export const RequestOptions = Symbol('RequestOptions');

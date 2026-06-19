@@ -152,11 +152,12 @@ export function createContentCreationWorkflow(id: string, name: string, options:
   draft?: string;
   review?: string;
   input?: Record<string, unknown>;
+  agents?: { ideas?: string; outline?: string; draft?: string; review?: string };
 } = {}) {
   const agents = {
-    ideas: options.ideas || 'claude-demo',
-    outline: options.outline || 'openai-demo', 
-    draft: options.draft || 'claude-demo',
+    ideas: options.agents?.ideas || options.ideas || 'claude-demo',
+    outline: options.agents?.outline || options.outline || 'openai-demo', 
+    draft: options.agents?.draft || options.draft || 'claude-demo',
     review: options.review || 'openai-demo'
   };
 

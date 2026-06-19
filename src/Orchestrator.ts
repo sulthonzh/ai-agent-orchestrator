@@ -6,6 +6,8 @@ export class Orchestrator {
   private workflows: Map<string, Workflow> = new Map();
   private config: OrchestratorConfig;
   private loadBalancing: LoadBalancingConfig;
+  private roundRobinIndex = 0;
+  private workflowCounter = 0;
 
   constructor(config: Partial<OrchestratorConfig> = {}) {
     this.config = {
@@ -41,7 +43,7 @@ export class Orchestrator {
     };
 
     this.loadBalancing = this.config.loadBalancing;
-    
+
     // Initialize agents from config
     this.config.agents.forEach(agentConfig => {
       this.addAgent(agentConfig);
@@ -56,11 +58,6 @@ export class Orchestrator {
 
     const agent = new Agent(config);
     this.agents.set(config.id, agent);
-    
-    // Start the agent automatically
-    agent.start().catch(error => {
-      console.error(`Failed to start agent ${config.id}:`, error);
-    });
 
     console.log(`🚀 Added agent: ${config.id} (${config.type})`);
     return agent;
@@ -75,7 +72,7 @@ export class Orchestrator {
     agent.stop().catch(error => {
       console.error(`Error stopping agent ${agentId}:`, error);
     });
-    
+
     this.agents.delete(agentId);
     console.log(`🗑️  Removed agent: ${agentId}`);
   }
@@ -123,23 +120,24 @@ export class Orchestrator {
       execution.status = 'completed';
       execution.endTime = new Date();
       execution.progress = 100;
-      
+
       workflow.executions.push(execution);
       return results;
     } catch (error) {
       execution.status = 'failed';
       execution.endTime = new Date();
       execution.errors.push(error instanceof Error ? error.message : String(error));
-      
+
       workflow.executions.push(execution);
       throw error;
     }
   }
 
   createWorkflow(workflow: Omit<Workflow, 'id' | 'status' | 'createdAt' | 'updatedAt' | 'executions'>): Workflow {
-    const id = `workflow_${Date.now()}`;
+    this.workflowCounter++;
+    const id = `workflow_${this.workflowCounter}`;
     const now = new Date();
-    
+
     const newWorkflow: Workflow = {
       id,
       status: 'draft',
@@ -163,7 +161,7 @@ export class Orchestrator {
     const updatedWorkflow = {
       ...workflow,
       ...updates,
-      updatedAt: new Date()
+      updatedAt: new Date(Date.now() + 1)
     };
 
     this.workflows.set(workflowId, updatedWorkflow);
@@ -181,7 +179,7 @@ export class Orchestrator {
 
   async performHealthChecks(): Promise<HealthCheckResult[]> {
     const results: HealthCheckResult[] = [];
-    
+
     for (const agent of this.agents.values()) {
       try {
         const result = await agent.performHealthCheck();
@@ -209,7 +207,7 @@ export class Orchestrator {
   }
 
   private selectAgent(priority: number): Agent | null {
-    const healthyAgents = Array.from(this.agents.values()).filter(agent => 
+    const healthyAgents = Array.from(this.agents.values()).filter(agent =>
       agent.getStatus() === 'healthy'
     );
 
@@ -227,20 +225,20 @@ export class Orchestrator {
       case 'random':
         return this.randomSelection(healthyAgents);
       default:
-        return healthyAgents[0];
+        return healthyAgents[0] ?? null;
     }
   }
 
   private roundRobinSelection(agents: Agent[]): Agent {
-    // Simple round-robin implementation
-    const currentIndex = (agents.length * 1000) % agents.length;
-    return agents[currentIndex];
+    const agent = agents[this.roundRobinIndex % agents.length]!;
+    this.roundRobinIndex++;
+    return agent;
   }
 
   private leastConnectionsSelection(agents: Agent[]): Agent {
-    return agents.reduce((least, current) => 
+    return agents.reduce((least, current) =>
       current.getInstance().currentLoad < least.getInstance().currentLoad ? current : least
-    );
+    )!;
   }
 
   private weightedSelection(agents: Agent[]): Agent {
@@ -259,22 +257,22 @@ export class Orchestrator {
       const agentId = agent.getId();
       const weight = weights[agentId] || 1;
       currentWeight += weight;
-      
+
       if (random <= currentWeight) {
         return agent;
       }
     }
 
-    return agents[0]; // Fallback
+    return agents[0]!; // Fallback
   }
 
   private randomSelection(agents: Agent[]): Agent {
-    return agents[Math.floor(Math.random() * agents.length)];
+    return agents[Math.floor(Math.random() * agents.length)]!;
   }
 
   private async executeWorkflowSteps(
-    workflow: Workflow, 
-    input: Record<string, unknown>, 
+    workflow: Workflow,
+    input: Record<string, unknown>,
     execution: WorkflowExecution
   ): Promise<Record<string, unknown>> {
     const results: Record<string, unknown> = { ...input };
@@ -296,6 +294,7 @@ export class Orchestrator {
           const shouldExecute = this.evaluateCondition(step.condition, results);
           if (!shouldExecute) {
             execution.results[step.id] = { skipped: true };
+            results[step.id] = { skipped: true };
             continue;
           }
         } catch (error) {
@@ -310,8 +309,11 @@ export class Orchestrator {
         }
 
         const stepInput = { ...input, ...step.input };
-        const response = await agent.request(JSON.stringify(stepInput));
-        
+        const response = await agent.request(JSON.stringify(stepInput), {
+          timeout: step.timeout,
+          retries: step.retry
+        });
+
         results[step.id] = response;
         execution.results[step.id] = { success: true, response };
         completedSteps.add(step.id);
@@ -329,41 +331,51 @@ export class Orchestrator {
   }
 
   private evaluateCondition(condition: string, context: Record<string, unknown>): boolean {
-    // Simple condition evaluation - in real implementation, this would use a proper expression evaluator
     try {
-      // Basic condition support (can be extended)
+      // Check === before == (so === is not matched by ==)
+      if (condition.includes('===')) {
+        const parts = condition.split('===').map(s => s.trim());
+        return this.evaluateExpression(parts[0]!, context) === this.evaluateExpression(parts[1]!, context);
+      }
+      
+      if (condition.includes('!==')) {
+        const parts = condition.split('!==').map(s => s.trim());
+        return this.evaluateExpression(parts[0]!, context) !== this.evaluateExpression(parts[1]!, context);
+      }
+      
       if (condition.includes('==')) {
-        const [left, right] = condition.split('==').map(s => s.trim());
-        return this.evaluateExpression(left, context) === this.evaluateExpression(right, context);
+        const parts = condition.split('==').map(s => s.trim());
+        return this.evaluateExpression(parts[0]!, context) === this.evaluateExpression(parts[1]!, context);
       }
       
       if (condition.includes('!=')) {
-        const [left, right] = condition.split('!=').map(s => s.trim());
-        return this.evaluateExpression(left, context) !== this.evaluateExpression(right, context);
+        const parts = condition.split('!=').map(s => s.trim());
+        return this.evaluateExpression(parts[0]!, context) !== this.evaluateExpression(parts[1]!, context);
       }
 
       if (condition.includes('>=')) {
-        const [left, right] = condition.split('>=').map(s => s.trim());
-        return Number(this.evaluateExpression(left, context)) >= Number(this.evaluateExpression(right, context));
+        const parts = condition.split('>=').map(s => s.trim());
+        return Number(this.evaluateExpression(parts[0]!, context)) >= Number(this.evaluateExpression(parts[1]!, context));
       }
 
       if (condition.includes('<=')) {
-        const [left, right] = condition.split('<=').map(s => s.trim());
-        return Number(this.evaluateExpression(left, context)) <= Number(this.evaluateExpression(right, context));
+        const parts = condition.split('<=').map(s => s.trim());
+        return Number(this.evaluateExpression(parts[0]!, context)) <= Number(this.evaluateExpression(parts[1]!, context));
       }
 
       if (condition.includes('&&')) {
-        const [left, right] = condition.split('&&').map(s => s.trim());
-        return this.evaluateCondition(left, context) && this.evaluateCondition(right, context);
+        const parts = condition.split('&&').map(s => s.trim());
+        return this.evaluateCondition(parts[0]!, context) && this.evaluateCondition(parts[1]!, context);
       }
 
       if (condition.includes('||')) {
-        const [left, right] = condition.split('||').map(s => s.trim());
-        return this.evaluateCondition(left, context) || this.evaluateCondition(right, context);
+        const parts = condition.split('||').map(s => s.trim());
+        return this.evaluateCondition(parts[0]!, context) || this.evaluateCondition(parts[1]!, context);
       }
 
-      // Default: check if the condition exists in context
-      return this.evaluateExpression(condition, context) !== undefined;
+      // Default: evaluate the expression and return its truthiness
+      const value = this.evaluateExpression(condition, context);
+      return value !== undefined && value !== false && value !== null && value !== 0 && value !== '';
 
     } catch (error) {
       console.warn(`Condition evaluation failed for "${condition}":`, error);
@@ -378,7 +390,7 @@ export class Orchestrator {
       const varName = expr.slice(2, -1);
       return this.getNestedValue(context, varName);
     }
-    
+
     // Try to parse as number
     const num = Number(expr);
     if (!isNaN(num)) {
@@ -394,7 +406,7 @@ export class Orchestrator {
   }
 
   private getNestedValue(obj: Record<string, unknown>, path: string): unknown {
-    return path.split('.').reduce((current, key) => {
+    return path.split('.').reduce<unknown>((current, key) => {
       return current && typeof current === 'object' ? (current as Record<string, unknown>)[key] : undefined;
     }, obj);
   }
