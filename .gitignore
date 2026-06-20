@@ -103,4 +103,7 @@ jspm_packages/
 # Windows
 Thumbs.db
 ehthumbs.db
-Desktop.ini
+Desktop.ini__pycache__/
+.venv/
+*.egg-info/
+.mypy_cache/
