@@ -14,19 +14,7 @@
 
 import { Orchestrator } from './Orchestrator.js';
 import { Agent } from './Agent.js';
-import type {
-  AgentConfig,
-  AgentInstance,
-  Workflow,
-  WorkflowStep,
-  WorkflowExecution,
-  LoadBalancingConfig,
-  ScalingConfig,
-  OrchestratorConfig,
-  HealthCheckResult,
-  MetricsData,
-  RequestOptions
-} from './types.js';
+import type { AgentConfig, OrchestratorConfig } from './types.js';
 
 export { Orchestrator } from './Orchestrator.js';
 export { Agent } from './Agent.js';

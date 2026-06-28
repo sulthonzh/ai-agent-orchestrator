@@ -332,16 +332,15 @@ describe('Agent', () => {
       expect(instance).not.toBe((agent as any).instance);
     });
 
-    it('should return metrics', () => {
+    it('should return metrics', async () => {
       const initialMetrics = agent.getMetrics();
       expect(Array.isArray(initialMetrics)).toBe(true);
       
       // Make a request to generate metrics
-      agent.start().then(() => {
-        agent.request('test');
-        const metrics = agent.getMetrics();
-        expect(metrics.length).toBeGreaterThan(0);
-      });
+      await agent.start();
+      await agent.request('test');
+      const metrics = agent.getMetrics();
+      expect(metrics.length).toBeGreaterThan(0);
     });
   });
 

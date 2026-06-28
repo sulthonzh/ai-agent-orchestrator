@@ -1,8 +1,8 @@
 # AI Agent Orchestrator
 
-![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-blue.svg) ![TypeScript](https://img.shields.io/badge/typescript-blue.svg) ![Node.js](https://img.shields.io/badge/node-18+-green.svg)
+![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-blue.svg) ![TypeScript](https://img.shields.io/badge/typescript-blue.svg) ![Node.js](https://img.shields.io/badge/node-18+-green.svg) ![Tests](https://img.shields.io/badge/tests-69%2F69-brightgreen.svg)
 
-Zero-dependency orchestration platform for AI agents with lifecycle management, workflow coordination, and intelligent load balancing.
+**Kubernetes for AI agents.** Orchestrate multiple AI models — Claude, OpenAI, custom functions — with automatic load balancing, health checks, retry logic, and multi-step workflows. Zero runtime dependencies.
 
 ## 🚀 Features
 

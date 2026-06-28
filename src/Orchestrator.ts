@@ -1,5 +1,5 @@
 import { Agent } from './Agent.js';
-import { AgentConfig, AgentInstance, HealthCheckResult, LoadBalancingConfig, OrchestratorConfig, RequestOptions, Workflow, WorkflowStep, WorkflowExecution } from './types.js';
+import { AgentConfig, AgentInstance, HealthCheckResult, LoadBalancingConfig, OrchestratorConfig, RequestOptions, Workflow, WorkflowExecution } from './types.js';
 
 export class Orchestrator {
   private agents: Map<string, Agent> = new Map();
@@ -206,7 +206,7 @@ export class Orchestrator {
     return Array.from(this.workflows.values());
   }
 
-  private selectAgent(priority: number): Agent | null {
+  private selectAgent(_priority: number): Agent | null {
     const healthyAgents = Array.from(this.agents.values()).filter(agent =>
       agent.getStatus() === 'healthy'
     );

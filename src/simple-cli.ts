@@ -12,7 +12,7 @@ try {
   console.log('✅ Successfully imported Orchestrator');
   
   // Test basic functionality
-  const orchestrator = new Orchestrator();
+  new Orchestrator();
   console.log('✅ Successfully created orchestrator instance');
   
   // Test CLI parsing - cli.ts doesn't export parseArgs, skip

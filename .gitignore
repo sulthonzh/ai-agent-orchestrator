@@ -19,27 +19,38 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
-# Runtime data
-pids
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+.DS_Store
+
+# Package manager
+.pnpm-debug.log*
+.yarn-integrity
+
+# Cache
+.cache/
+.parcel-cache/
+.vite/
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
 *.pid
 *.seed
 *.pid.lock
-
-# Coverage directory used by tools like istanbul
-coverage/
-*.lcov
-
-# nyc test coverage
-.nyc_output
-
-# node-waf configuration
-.lock-wscript
-
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
-
-# Dependency directories
-jspm_packages/
 
 # Optional npm cache directory
 .npm
@@ -56,49 +67,8 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
-.env.test
-
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
-
-# vuepress build output
-.vuepress/dist
-
-# Serverless directories
-.serverless
-
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# TypeScript cache
-*.tsbuildinfo
-
-# VSCode settings
-.vscode/
-
-# IDEs
-.idea/
-*.swp
-*.swo
-*~
-
-# macOS
-.DS_Store
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
 
 # Windows
 Thumbs.db

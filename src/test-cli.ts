@@ -6,7 +6,7 @@ console.log('Testing basic build functionality...\n');
 
 try {
   // Test that we can parse arguments
-  function parseArgs(args: string[]): Record<string, any> {
+  const parseArgs = (args: string[]): Record<string, any> => {
     const result: Record<string, any> = {};
     
     for (let i = 0; i < args.length; i++) {
@@ -36,7 +36,7 @@ try {
     }
     
     return result;
-  }
+  };
 
   // Test CLI parsing
   const testArgs = parseArgs(['--help', '--version', '1.0.0', '-v']);

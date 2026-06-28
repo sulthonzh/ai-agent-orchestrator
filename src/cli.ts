@@ -2,12 +2,11 @@
 
 import { Orchestrator } from './Orchestrator.js';
 import { AgentConfig, WorkflowStep, RequestOptions } from './types.js';
-import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// ESM equivalent of __dirname
+void __filename;
 
 // Simple CLI parser
 function parseArgs(args: string[]): Record<string, any> {
@@ -323,7 +322,7 @@ async function handleDemoCommand(): Promise<void> {
 
   // Add demo agents
   console.log('📦 Adding demo agents...');
-  const claudeAgent = orchestrator.addAgent({
+  orchestrator.addAgent({
     id: 'claude-demo',
     name: 'Claude Assistant',
     type: 'claude',
@@ -332,7 +331,7 @@ async function handleDemoCommand(): Promise<void> {
     timeout: 30000
   });
 
-  const openaiAgent = orchestrator.addAgent({
+  orchestrator.addAgent({
     id: 'openai-demo',
     name: 'OpenAI Assistant',
     type: 'openai',
