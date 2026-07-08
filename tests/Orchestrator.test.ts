@@ -10,12 +10,9 @@ describe('Orchestrator', () => {
     orchestrator = new Orchestrator();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Clean up all agents
-    const agents = orchestrator.getAgentStats();
-    agents.forEach(agent => {
-      orchestrator.removeAgent(agent.id);
-    });
+    await orchestrator.shutdown();
   });
 
   describe('constructor', () => {
@@ -106,15 +103,15 @@ describe('Orchestrator', () => {
       orchestrator.addAgent(config);
     });
 
-    it('should remove agent successfully', () => {
-      orchestrator.removeAgent('remove-test');
+    it('should remove agent successfully', async () => {
+      await orchestrator.removeAgent('remove-test');
       
       const stats = orchestrator.getAgentStats();
       expect(stats.length).toBe(0);
     });
 
-    it('should throw error for non-existent agent', () => {
-      expect(() => orchestrator.removeAgent('non-existent')).toThrow(
+    it('should throw error for non-existent agent', async () => {
+      await expect(orchestrator.removeAgent('non-existent')).rejects.toThrow(
         'Agent non-existent not found'
       );
     });
@@ -180,9 +177,9 @@ describe('Orchestrator', () => {
     it('should throw error when no healthy agents available', async () => {
       // Remove all agents
       const stats = orchestrator.getAgentStats();
-      stats.forEach(agent => {
-        orchestrator.removeAgent(agent.id);
-      });
+      for (const agent of stats) {
+        await orchestrator.removeAgent(agent.id);
+      }
 
       await expect(orchestrator.request('test')).rejects.toThrow(
         'No healthy agents available'

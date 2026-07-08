@@ -67,7 +67,7 @@ export class Agent {
     const maxWait = 1000;
     const startTime = Date.now();
     while (this.instance.currentLoad > 0 && Date.now() - startTime < maxWait) {
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await this.delay(10);
     }
     // Force-clear any stuck load
     this.instance.currentLoad = 0;

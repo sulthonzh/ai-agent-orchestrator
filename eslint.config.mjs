@@ -1,20 +1,30 @@
-import tseslint from 'typescript-eslint';
+import eslint from '@eslint/js';
+import tseslintParser from '@typescript-eslint/parser';
+import tseslintPlugin from '@typescript-eslint/eslint-plugin';
+import globals from 'globals';
 
-export default tseslint.config(
+export default [
   {
     files: ['src/**/*.ts'],
   },
-  ...tseslint.configs.recommended,
+  eslint.configs.recommended,
   {
+    files: ['src/**/*.ts'],
     languageOptions: {
+      parser: tseslintParser,
       ecmaVersion: 2022,
       sourceType: 'module',
       globals: {
-        node: true,
-        es2022: true,
+        ...globals.node,
+        ...globals.es2022,
+        NodeJS: 'readonly',
       },
     },
+    plugins: {
+      '@typescript-eslint': tseslintPlugin,
+    },
     rules: {
+      ...tseslintPlugin.configs.recommended.rules,
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
@@ -23,6 +33,7 @@ export default tseslint.config(
       'prefer-const': 'error',
       'no-var': 'error',
       'no-console': 'off',
+      'no-redeclare': 'off',
     },
   },
-);
+];

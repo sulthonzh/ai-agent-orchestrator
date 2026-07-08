@@ -63,18 +63,32 @@ export class Orchestrator {
     return agent;
   }
 
-  removeAgent(agentId: string): void {
+  async removeAgent(agentId: string): Promise<void> {
     const agent = this.agents.get(agentId);
     if (!agent) {
       throw new Error(`Agent ${agentId} not found`);
     }
 
-    agent.stop().catch(error => {
+    try {
+      await agent.stop();
+    } catch (error) {
       console.error(`Error stopping agent ${agentId}:`, error);
-    });
+    }
 
     this.agents.delete(agentId);
     console.log(`🗑️  Removed agent: ${agentId}`);
+  }
+
+  /** Gracefully stop all agents and clear resources. */
+  async shutdown(): Promise<void> {
+    const stopPromises = Array.from(this.agents.values()).map(agent =>
+      agent.stop().catch(error => {
+        console.error(`Error stopping agent ${agent.getId()}:`, error);
+      })
+    );
+    await Promise.all(stopPromises);
+    this.agents.clear();
+    this.roundRobinIndex = 0;
   }
 
   async requestToAgent(agentId: string, prompt: string, options: RequestOptions = {}): Promise<string> {

@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-07-08
+
+### Fixed
+- `Orchestrator.removeAgent()` now awaits `agent.stop()` (was fire-and-forget, causing hanging tests)
+- Added `shutdown()` method to Orchestrator for graceful cleanup of all agents
+- Updated tests: `afterEach` calls `await orchestrator.shutdown()` to prevent resource leaks
+- Updated CLI: Removed fire-and-forget pattern for agent removal
+- Fixed ESLint flat config: replaced missing `typescript-eslint` package with direct `@typescript-eslint/parser` + `@typescript-eslint/eslint-plugin` imports
+- Added `@eslint/js` and `globals` devDependencies for proper flat config support
+
+### Removed
+- `src/simple-cli.ts` (scratch/debug file)
+- `src/test-cli.ts` (scratch/debug file)
+- `test-debug.js` (scratch/debug file)
+
 ## [1.0.0] - 2026-06-18
 
 ### Added

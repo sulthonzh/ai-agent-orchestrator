@@ -190,7 +190,7 @@ async function handleAgentCommand(cmdArgs: Record<string, any>): Promise<void> {
     }
 
     const orchestrator = new Orchestrator();
-    orchestrator.removeAgent(cmdArgs.id);
+    await orchestrator.removeAgent(cmdArgs.id);
     console.log(`✅ Agent ${cmdArgs.id} removed successfully`);
   } 
   else {
@@ -381,8 +381,7 @@ async function handleDemoCommand(): Promise<void> {
 
   // Clean up
   console.log('\n🧹 Cleaning up...');
-  orchestrator.removeAgent('claude-demo');
-  orchestrator.removeAgent('openai-demo');
+  await orchestrator.shutdown();
 
   console.log('\n🎉 Demo completed successfully!');
 }

@@ -50,12 +50,14 @@
     "LICENSE"
   ],
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.62.1",
     "@typescript-eslint/parser": "^8.62.1",
     "@vitest/coverage-v8": "^4.0.0",
     "@vitest/ui": "^4.0.0",
     "eslint": "^9.39.4",
+    "globals": "^17.7.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
     "vitest": "^4.0.0"
