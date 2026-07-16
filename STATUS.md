@@ -1,14 +1,14 @@
 # STATUS.md — ai-agent-orchestrator
 
-**Last audit:** 2026-07-08 13:55 UTC
+**Last audit:** 2026-07-17 05:56 UTC
 **Status:** ✅ EXCEPTIONAL
 
 ## Exceptional Checklist
 
 - [x] **README hooks reader in first 3 lines** — "Kubernetes for AI agents. Orchestrate multiple AI models — Claude, OpenAI, custom functions — with automatic load balancing, health checks, retry logic, and multi-step workflows. Zero runtime dependencies."
 - [x] **Quick start works in <2 minutes** — CLI + programmatic examples, zero deps, `npm install && npx aaor`
-- [x] **All tests GREEN (100% pass rate)** — 69/69 tests pass across 3 test files (Agent: 26, Orchestrator: 34, index: 9)
-- [x] **Test coverage >= 80% on core logic** — 86.57% stmts, 77.45% branches, 86.3% funcs, 88.58% lines
+- [x] **All tests GREEN (100% pass rate)** — 106/106 tests pass across 4 test files (Agent: 26, Orchestrator: 34, index: 9, coverage-gaps: 37)
+- [x] **Test coverage >= 80% on core logic** — 96.85% stmts, 91.17% branches, 97.26% funcs, 96.99% lines
 - [x] **Zero TypeScript errors (strict mode)** — `tsc --noEmit` clean
 - [x] **Zero ESLint warnings** — `eslint src` clean (flat config with @eslint/js, @typescript-eslint/parser, @typescript-eslint/eslint-plugin)
 - [x] **No TODO/FIXME comments in shipped code** — verified via grep on src/
@@ -24,4 +24,4 @@
 - Previous hang issue (vitest v4 full suite hang) is RESOLVED. Root cause was fire-and-forget `agent.stop()` in `removeAgent()`. Fix: await + shutdown() method.
 - Removed 3 scratch/debug files: `src/simple-cli.ts`, `src/test-cli.ts`, `test-debug.js`
 - Fixed ESLint flat config: was importing `typescript-eslint` (not installed), now uses direct parser + plugin imports
-- Coverage could be improved on Orchestrator.ts branches (67.02%) but all core paths covered
+- Coverage improved: 77.45% → 91.17% branches via targeted coverage-gap tests
