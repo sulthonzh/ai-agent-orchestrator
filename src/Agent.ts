@@ -46,7 +46,7 @@ export class Agent {
     } catch (error) {
       this.instance.status = 'unhealthy';
       this.instance.consecutiveFailures++;
-      throw new Error(`Failed to start agent ${this.instance.id}: ${error}`);
+      throw new Error(`Failed to start agent ${this.instance.id}: ${error}`, { cause: error });
     }
   }
 

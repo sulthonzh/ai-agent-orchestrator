@@ -312,7 +312,7 @@ export class Orchestrator {
             continue;
           }
         } catch (error) {
-          throw new Error(`Condition evaluation failed for step ${step.id}: ${error}`);
+          throw new Error(`Condition evaluation failed for step ${step.id}: ${error}`, { cause: error });
         }
       }
 
