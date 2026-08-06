@@ -5,6 +5,9 @@ import globals from 'globals';
 
 export default [
   {
+    ignores: ['dist/**', 'node_modules/**', 'coverage/**'],
+  },
+  {
     files: ['src/**/*.ts'],
   },
   eslint.configs.recommended,

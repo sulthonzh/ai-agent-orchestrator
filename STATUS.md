@@ -1,8 +1,8 @@
 # STATUS.md — ai-agent-orchestrator
 
 **Last audit:** 2026-07-30 21:47 UTC
-**Re-Verified:** 2026-08-05 (UTC 2026-08-05 03:49) — 173/173 tests GREEN (9.65s vitest). No changes since last audit.
-**Prior:** 2026-08-03 (UTC 2026-08-03 15:47) — Fixed TS 7 + Node types + ESLint preserve-caught-error. Commit f366a47.
+**Re-Verified:** 2026-08-07 (UTC 2026-08-06 21:47) — 173/173 tests GREEN (9.19s vitest). **Fixed ESLint:** dist/ directory was being linted (112 no-undef errors). Added ignores for dist/node_modules/coverage. ESLint: 0 errors 0 warnings.
+**Prior:** 2026-08-05 (UTC 2026-08-05 03:49) — 173/173 tests GREEN (9.65s vitest). No changes since last audit.
 **Status:** ✅ EXCEPTIONAL
 
 ## Exceptional Checklist
