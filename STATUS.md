@@ -1,7 +1,7 @@
 # STATUS.md — ai-agent-orchestrator
 
 **Last audit:** 2026-08-08 08:50 UTC
-**Re-Verified:** 2026-08-11 (UTC 2026-08-11 15:49) — 173/173 tests GREEN (9.57s vitest). No changes since last audit.
+**Re-Verified:** 2026-08-14 (UTC 2026-08-13 21:50) — 173/173 tests GREEN (9.67s vitest). Merged changesets/action v2.1.0 (#25, FF-merge). Remote verified ✅ (8ef1334).
 **Prior:** 2026-08-10 (UTC 2026-08-09 16:37) — 173/173 tests GREEN (13.2s vitest).
 **Prior:** 2026-08-08 (UTC 2026-08-07 21:25) — 173/173 tests GREEN (9.81s vitest).
 **Prior:** 2026-08-07 (UTC 2026-08-06 21:47) — 173/173 tests GREEN (9.19s vitest). **Fixed ESLint:** dist/ directory was being linted (112 no-undef errors). Added ignores for dist/node_modules/coverage. ESLint: 0 errors 0 warnings.
