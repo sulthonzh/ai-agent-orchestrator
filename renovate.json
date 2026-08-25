@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "Cap typescript at ^6: @typescript-eslint peer-requires <6.1.0; TS7 is native-port, lockfile-desync class (dockervis r-228)",
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "allowedVersions": "^6"
+    }
   ]
 }
